@@ -242,7 +242,10 @@ module IceCube
       time = TimeUtil.match_zone(time, start_time) or raise ArgumentError, "Time required, got #{time.inspect}"
       if duration > 0
         return false if exception_time?(time)
-        occurs_between?(time - duration + 1, time)
+
+        start_of_time_span = time - duration + 1
+        start_of_time_span += TimeUtil.zone_offset_delta(time, start_of_time_span)
+        occurs_between?(start_of_time_span, time)
       else
         occurs_at?(time)
       end
